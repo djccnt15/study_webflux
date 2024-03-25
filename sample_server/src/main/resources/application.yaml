@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: simple_spring
+
+server:
+  port: 8090
