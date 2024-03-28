@@ -18,7 +18,7 @@ public class PostController {
     @GetMapping(path = "/{id}")
     public PostResponse getPosts(
         @PathVariable Long id
-    ) throws InterruptedException {
+    ) throws Exception {
         var post = postBusiness.getPost(id);
         return post;
     }
