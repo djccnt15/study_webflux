@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Service  // register this class and implements as a spring bean
-public @interface Converter {
-
+public @interface Business {
+    
     @AliasFor(annotation = Service.class)
     String value() default "";
 }
