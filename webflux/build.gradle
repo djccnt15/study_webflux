@@ -24,8 +24,13 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    // https://mvnrepository.com/artifact/io.asyncer/r2dbc-mysql
+    implementation 'io.asyncer:r2dbc-mysql:1.1.2'
 
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webflux-ui
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0'

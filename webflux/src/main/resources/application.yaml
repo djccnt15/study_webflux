@@ -1,6 +1,10 @@
 spring:
   application:
     name: study_webflux
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/spring
+    username: qwer
+    password: asdf
 
 logging:
   level:
