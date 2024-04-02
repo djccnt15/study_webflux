@@ -18,10 +18,9 @@ public class UserBusiness {
     private final UserService userService;
     private final UserConverter userConverter;
     
-    public Mono<UserResponse> createUser(
-        UserCreateRequest request
-    ) {
-        var userCreate = userService.create(request.getUserName(), request.getEmail());
+    public Mono<UserResponse> createUser(UserCreateRequest request) {
+        var userEntity = userConverter.toEntity(request);
+        var userCreate = userService.create(userEntity);
         return userCreate.map(userConverter::toResponse);
     }
     
@@ -30,9 +29,7 @@ public class UserBusiness {
         return userList.map(userConverter::toResponse);
     }
     
-    public Mono<ResponseEntity<UserResponse>> findUserById(
-        Long id
-    ) {
+    public Mono<ResponseEntity<UserResponse>> findUserById(Long id) {
         return userService.findById(id)
             .map(user -> ResponseEntity.ok(userConverter.toResponse(user)))
             .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
@@ -47,9 +44,7 @@ public class UserBusiness {
             .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
     
-    public Mono<ResponseEntity<?>> deleteUser(
-        Long id
-    ) {
+    public Mono<ResponseEntity<?>> deleteUser(Long id) {
         return userService.deleteById(id)
             .then(Mono.just(ResponseEntity.noContent().build()));
     }

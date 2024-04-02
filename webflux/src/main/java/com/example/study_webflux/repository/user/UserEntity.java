@@ -1,23 +1,36 @@
 package com.example.study_webflux.repository.user;
 
+import com.example.study_webflux.repository.BaseEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
+@NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity {
+@Table(name = "user")
+public class UserEntity extends BaseEntity {
     
-    private Long id;
-    
+    @Column(value = "name")
     private String userName;
     
     private String email;
     
+    @Column(value = "created_at")
+    @CreatedDate
     private LocalDateTime createdAt;
     
+    @Column(value = "updated_at")
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 }
