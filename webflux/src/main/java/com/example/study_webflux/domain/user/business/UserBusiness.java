@@ -48,4 +48,9 @@ public class UserBusiness {
         return userService.deleteById(id)
             .then(Mono.just(ResponseEntity.noContent().build()));
     }
+    
+    public Mono<ResponseEntity<?>> deleteUserByName(String name) {
+        return userService.deleteByName(name)
+            .then(Mono.just(ResponseEntity.noContent().build()));
+    }
 }

@@ -57,4 +57,11 @@ public class UserController {
         var response = userBusiness.deleteUser(id);
         return response;
     }
+    
+    @DeleteMapping(path = "/search")
+    public Mono<ResponseEntity<?>> deleteUserByName(
+        @RequestParam String name
+    ) {
+        return userBusiness.deleteUserByName(name);
+    }
 }

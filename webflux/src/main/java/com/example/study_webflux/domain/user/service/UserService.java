@@ -28,10 +28,6 @@ public class UserService {
         return user;
     }
     
-    public Mono<Void> deleteById(Long id) {
-        return userR2dbcRepository.deleteById(id);
-    }
-    
     public Mono<UserEntity> update(
         Long id,
         String name,
@@ -45,5 +41,13 @@ public class UserService {
             });
         
         return user;
+    }
+    
+    public Mono<Void> deleteById(Long id) {
+        return userR2dbcRepository.deleteById(id);
+    }
+    
+    public Mono<Void> deleteByName(String name) {
+        return userR2dbcRepository.deleteByName(name);
     }
 }
