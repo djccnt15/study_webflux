@@ -30,7 +30,7 @@ public class PostService {
             .bodyToMono(PostResponse.class)
             .onErrorResume(
                 error -> Mono.just(
-                    new PostResponse(id.toString(), "Fallback data %d".formatted(id))
+                    new PostResponse(id, "Fallback data %d".formatted(id))
                 )
             );
         return content;

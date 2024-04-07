@@ -14,7 +14,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/posts")
+@RequestMapping(path = "/posts/api")
 public class PostController {
     
     private final PostBusiness postBusiness;
