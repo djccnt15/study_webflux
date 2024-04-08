@@ -8,9 +8,9 @@ import reactor.core.publisher.Mono;
 
 public interface UserR2dbcRepository extends ReactiveCrudRepository<UserEntity, Long> {
     
-    Flux<UserEntity> findByName(String name);
+    Flux<UserEntity> findByUserName(String name);
     
-    Flux<UserEntity> findByNameOrderByIdDesc(String name);
+    Flux<UserEntity> findByUserNameOrderByIdDesc(String name);
     
     @Modifying
     @Query("DELETE * FROM USER WHERE NAME = :name")
