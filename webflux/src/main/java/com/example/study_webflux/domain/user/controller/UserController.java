@@ -1,11 +1,12 @@
 package com.example.study_webflux.domain.user.controller;
 
+import com.example.study_webflux.domain.post.business.PostBusiness;
 import com.example.study_webflux.domain.user.business.UserBusiness;
 import com.example.study_webflux.domain.user.model.UserCreateRequest;
+import com.example.study_webflux.domain.user.model.UserPostResponse;
 import com.example.study_webflux.domain.user.model.UserResponse;
 import com.example.study_webflux.domain.user.model.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -16,8 +17,9 @@ import reactor.core.publisher.Mono;
 @RequestMapping(path = "/users")
 public class UserController {
     
-    @Autowired
     private final UserBusiness userBusiness;
+    
+    private final PostBusiness postBusiness;
     
     @PostMapping(path = "")
     public Mono<UserResponse> createUser(
@@ -63,5 +65,13 @@ public class UserController {
         @RequestParam String name
     ) {
         return userBusiness.deleteUserByName(name);
+    }
+    
+    @GetMapping(path = "/{id}/post")
+    public Flux<UserPostResponse> getUserPost(
+        @PathVariable Long id
+    ) {
+        var postList = postBusiness.findPostByUserId(id);
+        return postList;
     }
 }

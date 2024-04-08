@@ -7,6 +7,7 @@ import com.example.study_webflux.domain.post.model.PostResponse;
 import com.example.study_webflux.domain.post.model.PostUpdateRequest;
 import com.example.study_webflux.domain.post.service.PostDbService;
 import com.example.study_webflux.domain.post.service.PostService;
+import com.example.study_webflux.domain.user.model.UserPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Flux;
@@ -64,12 +65,17 @@ public class PostBusiness {
         var post = postDbService.update(id, request.getTitle(), request.getContent())
             .map(postEntity -> ResponseEntity.ok(postConverter.toResponse(postEntity)))
             .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
-        
         return post;
     }
     
     public Mono<ResponseEntity<?>> deletePost(Long id) {
         return postDbService.deleteById(id)
             .then(Mono.just(ResponseEntity.noContent().build()));
+    }
+    
+    public Flux<UserPostResponse> findPostByUserId(Long id) {
+        var postList = postDbService.findAllByUserId(id)
+            .map(postConverter::toUserPostResponse);
+        return postList;
     }
 }

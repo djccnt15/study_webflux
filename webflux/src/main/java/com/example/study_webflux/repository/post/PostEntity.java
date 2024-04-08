@@ -1,6 +1,7 @@
 package com.example.study_webflux.repository.post;
 
 import com.example.study_webflux.repository.BaseEntity;
+import com.example.study_webflux.repository.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -27,6 +29,9 @@ public class PostEntity extends BaseEntity {
     private String title;
     
     private String content;
+    
+    @Transient
+    private UserEntity user;
     
     @Column(value = "created_at")
     @CreatedDate
