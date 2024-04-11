@@ -3,9 +3,12 @@ package com.example.study_webflux.domain.user.service;
 import com.example.study_webflux.repository.user.UserEntity;
 import com.example.study_webflux.repository.user.UserR2dbcRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +16,11 @@ public class UserService {
     
     // private final UserRepository userRepository;
     private final UserR2dbcRepository userR2dbcRepository;
+    private final ReactiveRedisTemplate<String, UserEntity> reactiveRedisTemplate;
+    
+    private String getUserCacheKey(Long id) {
+        return "user:%d".formatted(id);
+    }
     
     public Mono<UserEntity> create(UserEntity userEntity) {
         return userR2dbcRepository.save(userEntity);
@@ -24,7 +32,17 @@ public class UserService {
     }
     
     public Mono<UserEntity> findById(Long id) {
-        var user = userR2dbcRepository.findById(id);
+        var redisKey = getUserCacheKey(id);
+        var user = reactiveRedisTemplate.opsForValue()
+            .get(redisKey)
+            .switchIfEmpty(
+                userR2dbcRepository.findById(id)
+                    .flatMap(
+                        userEntity -> reactiveRedisTemplate.opsForValue()
+                            .set(redisKey, userEntity, Duration.ofSeconds(30))
+                            .then(Mono.just(userEntity))
+                    )
+            );
         return user;
     }
     
@@ -38,13 +56,18 @@ public class UserService {
                 userEntity.setUserName(name);
                 userEntity.setEmail(email);
                 return userR2dbcRepository.save(userEntity);
-            });
-        
+            })
+            .flatMap(userEntity -> reactiveRedisTemplate
+                .unlink(getUserCacheKey(id))
+                .then(Mono.just(userEntity))
+            );
         return user;
     }
     
     public Mono<Void> deleteById(Long id) {
-        return userR2dbcRepository.deleteById(id);
+        return userR2dbcRepository.deleteById(id)
+            .then(reactiveRedisTemplate.unlink(getUserCacheKey(id)))
+            .then(Mono.empty());
     }
     
     public Mono<Void> deleteByName(String name) {
